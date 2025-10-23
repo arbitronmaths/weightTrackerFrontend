@@ -9,7 +9,7 @@ const weight = () => {
   const [date, setDate] = useState("");
   const [weight, setWeight] = useState("");
 
-  const API_URL = "http://localhost:3000/weights";
+  const API_URL = "https://weighttrackerbackend.onrender.com/weights";
 
   const fetchWeights = async () => {
     try {
