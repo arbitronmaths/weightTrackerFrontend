@@ -1,0 +1,22 @@
+form{
+    box-shadow: 1px 1px 5px rgba(53, 50, 50, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #efe6e6;
+}
+
+form input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #787575;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #f577d1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
