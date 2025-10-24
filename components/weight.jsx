@@ -4,6 +4,28 @@ import axios from "axios";
 import { Line } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 
+// ✅ Chart.js imports & registration
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const API_URL = "http://localhost:3000/weights";
 
 export default function Weight() {
@@ -12,10 +34,9 @@ export default function Weight() {
   const [weight, setWeight] = useState("");
   const navigate = useNavigate();
 
-  // 🛡️ Get token from localStorage
   const token = localStorage.getItem("token");
 
-  // 🔒 Redirect to login if not authenticated
+  // Redirect to login if no token
   useEffect(() => {
     if (!token) {
       alert("Please log in first!");
@@ -23,13 +44,15 @@ export default function Weight() {
     }
   }, [token, navigate]);
 
-  // 📦 Fetch all weights (secured)
+  // Fetch weights securely
   const fetchWeights = async () => {
+    if (!token) return;
     try {
       const res = await axios.get(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setFormData(res.data);
+      // Ensure it's an array
+      setFormData(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error("Error fetching weights:", error);
       if (error.response?.status === 401) {
@@ -40,25 +63,21 @@ export default function Weight() {
     }
   };
 
-  // ➕ Submit new weight (secured)
+  // Submit new weight
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!date || !weight) {
       alert("Please fill in both date and weight");
       return;
     }
-
     try {
       await axios.post(
         API_URL,
         { date, weight: parseFloat(weight) },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setDate("");
       setWeight("");
-      alert("Weight added successfully!");
       fetchWeights();
     } catch (err) {
       console.error("Error adding weight:", err);
@@ -67,7 +86,22 @@ export default function Weight() {
 
   useEffect(() => {
     fetchWeights();
-  }, []);
+  }, [token]);
+
+  // Chart data
+  const chartData = {
+    labels: formData.map((entry) =>
+      entry.date ? new Date(entry.date).toLocaleDateString() : "N/A"
+    ),
+    datasets: [
+      {
+        label: "Weight (kg)",
+        data: formData.map((entry) => entry.weight || 0),
+        borderColor: "#3b82f6",
+        tension: 0.3,
+      },
+    ],
+  };
 
   return (
     <div
@@ -102,26 +136,10 @@ export default function Weight() {
       </div>
 
       {/* Graph Section */}
-      <div
-        className="WeightGraph"
-        style={{ marginTop: "100px", width: "500px" }}
-      >
+      <div className="WeightGraph" style={{ marginTop: "100px", width: "500px" }}>
         <h2>Weight Graph</h2>
-        <Line
-          data={{
-            labels: formData.map((entry) =>
-              new Date(entry.date).toLocaleDateString()
-            ),
-            datasets: [
-              {
-                label: "Weight (kg)",
-                data: formData.map((entry) => entry.weight),
-                borderColor: "#3b82f6",
-                tension: 0.3,
-              },
-            ],
-          }}
-        />
+        {/* Use key to force chart re-render and prevent canvas reuse error */}
+        <Line key={formData.length} data={chartData} options={{ responsive: true }} />
       </div>
     </div>
   );
