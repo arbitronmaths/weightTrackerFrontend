@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "http://localhost:3000/auth/login";
+const BASE_URL = "https://weighttrackerbackend.onrender.com/auth/login";
 
 export default function Login() {
 //   const [form, setForm] = useState({ username: "http://localhost:3000/auth/login", password: "" });
