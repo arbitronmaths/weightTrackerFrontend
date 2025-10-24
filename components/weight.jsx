@@ -26,7 +26,7 @@ ChartJS.register(
   Legend
 );
 
-const API_URL = "https://weighttrackerbackend.onrender.com/weights";
+const API_URL = "https://weighttrackerbackend-2.onrender.com/weights";
 
 export default function Weight() {
   const [formData, setFormData] = useState([]);

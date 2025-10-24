@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "https://weighttrackerbackend.onrender.com/auth/register";
+const BASE_URL = "https://weighttrackerbackend-2.onrender.com/auth/register";
 
 export default function Signup() {
   const [form, setForm] = useState({ email: "", password: "" });
