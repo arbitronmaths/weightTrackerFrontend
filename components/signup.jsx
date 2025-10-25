@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./login.css"
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = "https://weighttrackerbackend-2.onrender.com/auth/register";
@@ -65,3 +66,6 @@ export default function Signup() {
     </form>
   );
 }
+
+
+
